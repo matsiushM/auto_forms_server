@@ -6,7 +6,7 @@ import * as process from "node:process";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:8080', // Разрешенный источник (origin)
+    origin: '*', // Разрешенный источник (origin)
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Разрешенные HTTP-методы
     allowedHeaders: 'Content-Type, Accept', // Разрешенные заголовки
     preflightContinue: false,
