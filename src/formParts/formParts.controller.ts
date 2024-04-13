@@ -45,7 +45,7 @@ export class FormPartsController {
   async handleDataPhoto(@Body() data: any) {
     console.log('Response from external API:', data);
     try {
-      const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka/StoksPOST_Foto/json';
+      const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Foto/stoks_Foto/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
 
       const response: Observable<any> = this.httpService.post(url, data, {
