@@ -10,8 +10,6 @@ export class FormPartsController {
   @Post('/data')
   async handleData(@Body() data: any) {
     try {
-      console.log('Received data:', data);
-
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka/Stoks/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
 
@@ -45,9 +43,8 @@ export class FormPartsController {
 
   @Post('/dataPhoto')
   async handleDataPhoto(@Body() data: any) {
+    console.log('Response from external API:', data);
     try {
-      console.log('Received data:', data);
-
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka/StoksPOST_Foto/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
 
