@@ -97,14 +97,13 @@ export class FormPartsController {
       response.subscribe({
         next: responseData => {
           console.log('Response from external API:', responseData.data);
+          return responseData.data;
         },
         error: error => {
           console.error('Error sending data:', error.response?.data || error.message);
           throw error;
         }
       });
-
-      return response;
     } catch (error) {
       console.error('Error sending data:', error.response?.data || error.message);
       throw error;
