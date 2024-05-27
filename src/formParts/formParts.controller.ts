@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {Controller, Post, Body, Get} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -43,7 +43,6 @@ export class FormPartsController {
 
   @Post('/dataPhoto')
   async handleDataPhoto(@Body() data: any) {
-    console.log('Response from external API:', data);
     try {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Foto/stoks_Foto/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
@@ -76,9 +75,8 @@ export class FormPartsController {
     }
   }
 
-  @Post('/searchAuto')
+  @Get('/searchAuto')
   async handleSearchAuto(@Body() data: any) {
-    console.log('Response from external API:', data);
     try {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Kod/stoks_Kod/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
