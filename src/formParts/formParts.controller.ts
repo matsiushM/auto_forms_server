@@ -1,11 +1,12 @@
-import {Controller, Post, Body, Get} from '@nestjs/common';
+import {Controller, Post, Body, Get, Query, HttpException, HttpStatus} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { Observable } from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Controller()
 export class FormPartsController {
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService) {
+  }
 
   @Post('/data')
   async handleData(@Body() data: any) {
@@ -18,10 +19,10 @@ export class FormPartsController {
           Authorization: authHeader,
         },
       }).pipe(
-        catchError(error => {
-          console.error('Error sending data:', error.response?.data || error.message);
-          throw error;
-        })
+          catchError(error => {
+            console.error('Error sending data:', error.response?.data || error.message);
+            throw error;
+          })
       );
 
       response.subscribe({
@@ -34,7 +35,7 @@ export class FormPartsController {
         }
       });
 
-      return { message: 'Data sent to external API successfully' };
+      return {message: 'Data sent to external API successfully'};
     } catch (error) {
       console.error('Error sending data:', error.response?.data || error.message);
       throw error;
@@ -68,7 +69,7 @@ export class FormPartsController {
         }
       });
 
-      return { message: 'Data sent to external API successfully' };
+      return {message: 'Data sent to external API successfully'};
     } catch (error) {
       console.error('Error sending data:', error.response?.data || error.message);
       throw error;
@@ -76,35 +77,38 @@ export class FormPartsController {
   }
 
   @Get('/searchAuto')
-  async handleSearchAuto(@Body() data: any) {
+  async handleSearchAuto(@Query() query: any) {
     try {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Kod/stoks_Kod/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
 
-      const response: Observable<any> = this.httpService.post(url, data, {
-        headers: {
-          Authorization: authHeader,
-        },
-      }).pipe(
-          catchError(error => {
-            console.error('Error sending data:', error.response?.data || error.message);
-            throw error;
-          })
+      const response = await firstValueFrom(
+          this.httpService.post(url, query, {
+            headers: {
+              Authorization: authHeader,
+            },
+          }).pipe(
+              catchError(error => {
+                console.error('Error sending data:', error.response?.data || error.message);
+                throw new HttpException({
+                  status: HttpStatus.BAD_REQUEST,
+                  error: 'Error sending data',
+                  message: error.response?.data || error.message,
+                }, HttpStatus.BAD_REQUEST);
+              })
+          )
       );
 
-      response.subscribe({
-        next: responseData => {
-          console.log('Response from external API:', responseData.data);
-          return responseData.data;
-        },
-        error: error => {
-          console.error('Error sending data:', error.response?.data || error.message);
-          throw error;
-        }
-      });
+      console.log('Response from external API:', response.data);
+      return response.data;
+
     } catch (error) {
-      console.error('Error sending data:', error.response?.data || error.message);
-      throw error;
+      console.error('Unexpected error:', error.message);
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Unexpected error',
+        message: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
