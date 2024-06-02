@@ -1,7 +1,8 @@
-import {Controller, Post, Body, Get, Query, HttpException, HttpStatus} from '@nestjs/common';
+import {Controller, Post, Body, Get, Query, HttpException, HttpStatus, Res} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import {firstValueFrom, Observable} from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Response } from 'express';
 
 @Controller()
 export class FormPartsController {
@@ -9,42 +10,29 @@ export class FormPartsController {
   }
 
   @Post('/data')
-  async handleData(@Body() data: any) {
-    try {
+  async handleData(@Body() data: any, @Res() res: Response) {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka/Stoks/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
-
       const response: Observable<any> = this.httpService.post(url, data, {
         headers: {
           Authorization: authHeader,
         },
-      }).pipe(
-          catchError(error => {
-            console.error('Error sending data:', error.response?.data || error.message);
-            throw error;
-          })
-      );
+      });
 
       response.subscribe({
         next: responseData => {
           console.log('Response from external API:', responseData.data);
+          res.status(responseData.response.status).send(responseData.data);
         },
         error: error => {
           console.error('Error sending data:', error.response?.data || error.message);
-          throw error;
+          res.status(error.response.status).send();
         }
       });
-
-      return {message: 'Data sent to external API successfully'};
-    } catch (error) {
-      console.error('Error sending data:', error.response?.data || error.message);
-      throw error;
-    }
   }
 
   @Post('/dataPhoto')
-  async handleDataPhoto(@Body() data: any) {
-    try {
+  async handleDataPhoto(@Body() data: any, @Res() res: Response) {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Foto/stoks_Foto/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
 
@@ -52,32 +40,22 @@ export class FormPartsController {
         headers: {
           Authorization: authHeader,
         },
-      }).pipe(
-          catchError(error => {
-            console.error('Error sending data:', error.response?.data || error.message);
-            throw error;
-          })
-      );
-
-      response.subscribe({
-        next: responseData => {
-          console.log('Response from external API:', responseData.data);
-        },
-        error: error => {
-          console.error('Error sending data:', error.response?.data || error.message);
-          throw error;
-        }
       });
 
-      return {message: 'Data sent to external API successfully'};
-    } catch (error) {
-      console.error('Error sending data:', error.response?.data || error.message);
-      throw error;
-    }
+    response.subscribe({
+      next: responseData => {
+        console.log('Response from external API:', responseData.data);
+        res.status(responseData.response.status).send(responseData.data);
+      },
+      error: error => {
+        console.error('Error sending dataPhoto:', error.response?.data || error.message);
+        res.status(error.response.status).send();
+      }
+    });
   }
 
   @Get('/searchAuto')
-  async handleSearchAuto(@Query() query: any) {
+  async handleSearchAuto(@Query() query: any, @Res() res: Response) {
     try {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Kod/stoks_Kod/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
