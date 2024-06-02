@@ -21,7 +21,7 @@ export class FormPartsController {
 
       response.subscribe({
         next: responseData => {
-          console.log('Response from external API:', responseData.data);
+          console.log('Response from external API:', responseData.message);
           res.status(responseData.status).send(responseData.data);
         },
         error: error => {
