@@ -55,7 +55,7 @@ export class FormPartsController {
   }
 
   @Get('/searchAuto')
-  async handleSearchAuto(@Query() query: any, @Res() res: Response) {
+  async handleSearchAuto(@Query() query: any) {
     try {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Kod/stoks_Kod/json';
       const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
