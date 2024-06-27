@@ -13,6 +13,6 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
   };
   app.enableCors(corsOptions);
-  await app.listen(process.env.PORT || '0.0.0.0');
+  await app.listen(process.env.PORT || '0.0.0.0'); //process.env.PORT || '0.0.0.0'
 }
 bootstrap();
