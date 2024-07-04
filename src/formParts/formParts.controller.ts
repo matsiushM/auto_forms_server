@@ -1,15 +1,14 @@
-import {Controller, Post, Body, Get, Query, HttpException, HttpStatus, Res, UseGuards} from '@nestjs/common';
+import {Controller, Post, Body, Get, Query, HttpException, HttpStatus, Res} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import {firstValueFrom, Observable} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Response } from 'express';
-import {JwtAuthGuard} from "../auth/local-auth.guard";
+
 
 @Controller()
 export class FormPartsController {
   constructor(private httpService: HttpService) {
   }
-  @UseGuards(JwtAuthGuard)
   @Post('/data')
   async handleData(@Body() data: any, @Res() res: Response) {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka/Stoks/json';
@@ -32,7 +31,6 @@ export class FormPartsController {
       });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/dataPhoto')
   async handleDataPhoto(@Body() data: any, @Res() res: Response) {
       const url = 'http://178.124.201.2/InfoBase/hs/Zagruzka_Foto/stoks_Foto/json';
@@ -56,7 +54,6 @@ export class FormPartsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/searchAuto')
   async handleSearchAuto(@Query() query: any) {
     try {
