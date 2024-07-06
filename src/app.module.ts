@@ -10,7 +10,6 @@ import {HttpModule} from "@nestjs/axios";
         FormPartsModule,
         AuthorizationModule,
         LoadPartsModule,
-        HttpModule,
     ],
 })
 export class AppModule {
