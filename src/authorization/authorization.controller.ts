@@ -11,7 +11,6 @@ export class AuthorizationController {
     @Post('/loadLogin')
     async loadLogin(@Res() res: Response) {
         const data = JSON.stringify( {test: "dghsghd"});
-        console.log(data)
         const url = 'http://178.124.201.2/InfoBase/hs/ZaprosUsers/stoks_Users/json';
         const authHeader = 'Basic ' + Buffer.from('111:').toString('base64');
         const response: Observable<any> = this.httpService.post(url, data, {
